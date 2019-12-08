@@ -1,5 +1,8 @@
 let express = require('express');
 let app = express();
+const cors = require('cors')
+const { pool } = require('./config')
+app.use(cors())
 
 let port = process.env.PORT || 8080;
 
@@ -9,24 +12,42 @@ app.get('/himastermind/newgame/*', function (req, res) {
 	let name = req.url.substring(22);
 	name = name.substring(0, (name.indexOf('/')<0?name.length:name.indexOf('/')));
 	let id = makeid(6);
-	history.set(id, [Math.floor(Math.random()*1000000), (Date.now()/1000 | 0)]);
-	console.log(history);
-	res.send(id);
+	let correct = Math.floor(Math.random()*1000000);
+	// history.set(id, [Math.floor(Math.random()*1000000), (Date.now()/1000 | 0)]);
+	pool.query('INSERT INTO data (key, correct, started) VALUES  ($1, $2, $3)', [id, correct, (Date.now()/1000 | 0)], error => {
+	    if (error) {
+    	  	throw error;
+    	}
+    	res.send(id);
+  	})
+	// console.log(history);
 });
 
 app.get('/himastermind/play/*', function (req, res) {
 	let params = req.url.substring(19);
 	code = params.substring(0, (params.indexOf('/')<0?params.length:params.indexOf('/')));
 	guess = params.substring(params.indexOf('/')<0?params.length:params.indexOf('/') + 1);
-	if (history.has(code)) {
-		let accuracy = getDigitsAccuracy(Array.from(history.get(code)[0].toString()), Array.from(guess));
-		res.send(accuracy + ' ' + ((Date.now()/1000 | 0)-(history.get(code)[1])).toString());
-	} else {
-		res.send('error!');
-	}
+	// if (history.has(code)) {
+	// 	let accuracy = getDigitsAccuracy(Array.from(history.get(code)[0].toString()), Array.from(guess));
+	// 	res.send(accuracy + ' ' + ((Date.now()/1000 | 0)-(history.get(code)[1])).toString());
+	// } else {
+	// 	res.send('error!');
+	// }
+	pool.query('SELECT * FROM books WHERE id IN ('+code+')', (error, results) => {
+    if (error) {
+    	throw error
+    }
+    if (results.length == 0) {
+    	res.send('error');
+    }
+	let accuracy = getDigitsAccuracy(Array.from(results[0].correct.toString()), Array.from(guess));
+    res.send(accuracy + ' ' + ((Date.now()/1000 | 0)-results[0].started).toString());
+  })
 });
 
-app.listen(port);
+app.listen(process.env.PORT || 8080, () => {
+  console.log(`Server listening`)
+})
 
 function getDigitsAccuracy(correct, guess) {
 	correct_digits = 0;
