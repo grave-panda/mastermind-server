@@ -33,7 +33,7 @@ app.get('/himastermind/play/*', function (req, res) {
 	// } else {
 	// 	res.send('error!');
 	// }
-	pool.query('SELECT * FROM books WHERE id IN ('+code+')', (error, results) => {
+	pool.query('SELECT * FROM data WHERE id IN ('+code+')', (error, results) => {
     if (error) {
     	throw error
     }
