@@ -33,7 +33,7 @@ app.get('/himastermind/play/*', function (req, res) {
 	// } else {
 	// 	res.send('error!');
 	// }
-	pool.query('SELECT * FROM data WHERE id=\''+code+'\';', (error, results) => {
+	pool.query('SELECT * FROM data WHERE key=\''+code+'\';', (error, results) => {
     if (error) {
     	throw error
     }
