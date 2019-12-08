@@ -40,6 +40,7 @@ app.get('/himastermind/play/*', function (req, res) {
     if (results.length == 0) {
     	res.send('error');
     }
+    console.log(results);
 	let accuracy = getDigitsAccuracy(Array.from(results[0].correct.toString()), Array.from(guess));
     res.send(accuracy + ' ' + ((Date.now()/1000 | 0)-results[0].started).toString());
   })
