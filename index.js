@@ -1,7 +1,7 @@
 let express = require('express');
 let app = express();
 
-let port = process.env.POR || 8080;
+let port = process.env.PORT || 8080;
 
 history = new Map();
 
