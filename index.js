@@ -28,6 +28,9 @@ app.get('/himastermind/play/*', function (req, res) {
 	let params = req.url.substring(19);
 	code = params.substring(0, (params.indexOf('/')<0?params.length:params.indexOf('/')));
 	guess = params.substring(params.indexOf('/')<0?params.length:params.indexOf('/') + 1);
+	if (guess.length != 6) {
+		res.send('error');
+	} else
 	pool.query('SELECT * FROM data WHERE key=\''+code+'\';', (error, results) => {
     if (error) {
     	throw error
@@ -37,7 +40,7 @@ app.get('/himastermind/play/*', function (req, res) {
     }
 	let accuracy = getDigitsAccuracy(Array.from(results.rows[0].correct.toString()), Array.from(guess));
     res.send(accuracy + ' ' + ((Date.now()/1000 | 0)-results.rows[0].started).toString());
-  })
+  });
 });
 
 app.listen(process.env.PORT || 8080, () => {
