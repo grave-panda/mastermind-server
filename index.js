@@ -13,6 +13,9 @@ app.get('/himastermind/newgame/*', function (req, res) {
 	name = name.substring(0, (name.indexOf('/')<0?name.length:name.indexOf('/')));
 	let id = makeid(6);
 	let correct = Math.floor(Math.random()*1000000);
+	while (correct < 100000) {
+		correct = Math.floor(Math.random()*1000000);
+	}
 	pool.query('INSERT INTO data (key, correct, started) VALUES  ($1, $2, $3)', [id, correct, (Date.now()/1000 | 0)], error => {
 	    if (error) {
     	  	throw error;
@@ -58,7 +61,7 @@ function getDigitsAccuracy(correct, guess) {
 				if(correct[j] == guess[i]){
 					misplaced_digits++;
 					guess[i] = 'a';
-					correct[i] = 'a';
+					correct[j] = 'a';
 				}
 			}
 		}
