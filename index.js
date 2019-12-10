@@ -65,6 +65,7 @@ function getDigitsAccuracy(correct, guess) {
 					misplaced_digits++;
 					guess[i] = 'a';
 					correct[j] = 'a';
+					break;
 				}
 			}
 		}
