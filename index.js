@@ -37,7 +37,7 @@ app.get('/himastermind/play/*', function (req, res) {
     	throw error
     }
     if (results.length == 0) {
-    	res.send('error');
+    	res.send('error: incorrect key');
     }
 	let accuracy = getDigitsAccuracy(Array.from(results.rows[0].correct.toString()), Array.from(guess));
     res.send(accuracy + ' ' + ((Date.now()/1000 | 0)-results.rows[0].started).toString());
