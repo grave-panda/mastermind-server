@@ -39,8 +39,12 @@ app.get('/himastermind/play/*', function (req, res) {
     if (results.length == 0) {
     	res.send('error: incorrect key');
     } else {
-		let accuracy = getDigitsAccuracy(Array.from(results.rows[0].correct.toString()), Array.from(guess));
-    	res.send(accuracy + ' ' + ((Date.now()/1000 | 0)-results.rows[0].started).toString());
+    	try{
+			let accuracy = getDigitsAccuracy(Array.from(results.rows[0].correct.toString()), Array.from(guess));
+    		res.send(accuracy + ' ' + ((Date.now()/1000 | 0)-results.rows[0].started).toString());
+    	} catch(exc) {
+    		res.send('error');
+    	}
 	}
   });
 });
