@@ -16,6 +16,7 @@ app.get('/himastermind/newgame/*', function (req, res) {
 	while (correct < 100000) {
 		correct = Math.floor(Math.random()*1000000);
 	}
+	id = parseInt(id.toString().replace(/0/g, '1'));
 	pool.query('INSERT INTO data (key, correct, started) VALUES  ($1, $2, $3)', [id, correct, (Date.now()/1000 | 0)], error => {
 	    if (error) {
     	  	throw error;
